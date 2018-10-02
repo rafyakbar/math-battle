@@ -1,14 +1,15 @@
 import cv2
+import numpy as np
+from app.support.helper import Helper
 
 class MathBattleMenu:
     def __init__(self, frame, window_width, window_height):
-        self.__frame = frame
         self.__window_width = window_width
         self.__window_height = window_height
 
         self.__menu_button_distance = 25
 
-        self.__menu_button_count = 3
+        self.__menu_button_count = 4
 
         self.__menu_button_side = int((self.__window_width - ((self.__menu_button_count + 1) * self.__menu_button_distance)) / self.__menu_button_count)
 
@@ -26,7 +27,28 @@ class MathBattleMenu:
             int(self.__window_height / 8 * 0.95)
         )
 
-    def getRenderedFrame(self):
+    def getRenderedFrame(self, frame):
+        self.__frame = frame
+        # self.__frame = np.zeros_like(frame)
+        # self.__frame[:, :] = np.array([255, 255, 255])
+
+        center_pointer, radius = Helper.getObjectDetection(
+            frame,
+            (29, 100, 6),
+            (50, 255, 200)
+        )
+
+        if center_pointer is not None:
+            radius = int(radius)
+
+            cv2.circle(
+                self.__frame,
+                center_pointer,
+                radius,
+                (12,102,75),
+                3
+            )
+
         # menggambar kotak nama tittle game
         cv2.rectangle(
             self.__frame,
@@ -49,7 +71,7 @@ class MathBattleMenu:
 
         # menggambar tombol-tombol pada menu
         button_top_left_point_x = self.__menu_button_distance
-        button_top_left_point_y = int(((self.__window_height - self.__title_box_position_bottom_right[1]) / 2))
+        button_top_left_point_y = int(((self.__window_height - self.__title_box_position_bottom_right[1]) / 2) - (self.__menu_button_side / 2) + self.__title_box_position_bottom_right[1])
         for c in range(0, self.__menu_button_count - 1):
             label = str(c + 1) + 'Player' + ('' if c == 0 else 's')
             self.__generateButton(button_top_left_point_x, button_top_left_point_y, label)

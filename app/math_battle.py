@@ -18,11 +18,19 @@ class MathBattle:
         self.__frame = cv2.resize(
             self.__frame,
             (
-                Helper.getMonitorWidth(),
-                int(((Helper.getMonitorWidth() - frame.shape[1]) / frame.shape[1] + 1) * frame.shape[0])
+                self.__window_width,
+                self.__window_height
             )
         )
 
     def getRenderedFrame(self, frame):
+        frame = cv2.resize(
+            frame,
+            (
+                self.__window_width,
+                self.__window_height
+            )
+        )
+        frame = cv2.flip(frame, 1)
 
-        return self.__menu.getRenderedFrame()
+        return self.__menu.getRenderedFrame(frame)

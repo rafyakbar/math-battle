@@ -1,6 +1,7 @@
 from app.math_battle import MathBattle
 import cv2
 
+# capture = cv2.VideoCapture('http://192.168.43.1:8080/video')
 capture = cv2.VideoCapture(0)
 ret, frame = capture.read()
 
